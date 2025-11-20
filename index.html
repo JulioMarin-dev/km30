@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Screen Image Slider con Menú</title>
+    <!-- Incluye la fuente e iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- ============================================== -->
+    <!--                 BARRA DE MENÚ (FIJO)           -->
+    <!-- ============================================== -->
+    <header class="page-header">
+        <a href="#" class="logo-link">
+            <div class="logo">
+                <img src="logo-placeholder.png" alt="Logo de la Empresa" style="height: 50px;">
+            </div>
+        </a>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#about" class="active">Nosotros</a></li>
+                <li><a href="#services">Servicios</a></li>
+                <li><a href="#clients">Clientes</a></li>
+                <li><a href="#contact">Contacto</a></li>
+                
+                <!-- Selector de Idioma (desplegable) -->
+                <li class="language-switcher">
+                    <div class="current-lang">
+                        <img src="flag-es.png" alt="Spanish Flag" style="width: 24px; height: 16px;">
+                        ES
+                    </div>
+                    <ul class="lang-options">
+                        <li class="active-lang">
+                            <img src="flag-es.png" alt="Spanish Flag" style="width: 24px; height: 16px;">
+                            Español
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="flag-en.png" alt="English Flag" style="width: 24px; height: 16px;">
+                                English
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ============================================== -->
+    <!--                 CONTENEDOR DEL SLIDER          -->
+    <!-- ============================================== -->
+    <div class="container">
+        <!-- El contenedor 'slide' contendrá todos los 'item' -->
+        <div class="slide">
+            
+            <!-- Items (diapositivas) con rutas locales en la carpeta 'images/' -->
+            <div class="item" style="background-image: url('images/imagen1.jpeg');">
+                <div class="content">
+                    <div class="name">Ireland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/imagen2.jpeg');">
+                <div class="content">
+                    <div class="name">Finland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/imagen3.jpeg');">
+                <div class="content">
+                    <div class="name">Iceland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/imagen4.jpeg');">
+                <div class="content">
+                    <div class="name">Australia</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+            
+            <div class="item" style="background-image: url('images/imagen5.jpeg');">
+                <div class="content">
+                    <div class="name">Netherland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+            
+            <div class="item" style="background-image: url('images/imagen6.jpeg');">
+                <div class="content">
+                    <div class="name">Ireland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Contenedor de los botones de navegación del Slider -->
+        <div class="button">
+            <button class="prev"><i class="fa-solid fa-arrow-left"></i></button>
+            <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+<section id="about" class="about-section">
+        
+        <div class="about-bg-layer reveal">
+            <div id="bg-somos" class="bg-image active" style="background-image: url('images/bg-somos.jpg');"></div>
+            <div id="bg-mision" class="bg-image" style="background-image: url('images/bg-mision.jpg');"></div>
+            <div id="bg-vision" class="bg-image" style="background-image: url('images/bg-vision.jpg');"></div>
+        </div>
+        
+        <div class="about-content-wrapper">
+            <h2 class="section-title reveal">NOSOTROS</h2>
+            <div class="about-tabs reveal">
+                <button class="tab-button active" data-tab="somos">Somos</button>
+                <button class="tab-button" data-tab="mision">Misión</button>
+                <button class="tab-button" data-tab="vision">Visión</button>
+            </div>
+
+            <div class="about-content reveal">
+                <div id="somos" class="tab-content active">
+                    <h3>Quiénes Somos</h3>
+                    <p>Somos una empresa líder en soluciones tecnológicas, con más de una década de experiencia en el mercado. Nuestro equipo está compuesto por profesionales apasionados por la innovación y la entrega de resultados excepcionales a nuestros clientes. Nos enfocamos en la excelencia y la adaptabilidad para impulsar el futuro de su negocio.</p>
+                </div>
+                
+                <div id="mision" class="tab-content">
+                    <h3>Nuestra Misión</h3>
+                    <p>Proveer soluciones digitales de vanguardia que maximicen la eficiencia operativa y el crecimiento sostenible de nuestros socios comerciales. Nos comprometemos a mantenernos a la vanguardia de la tecnología y ofrecer un servicio al cliente insuperable.</p>
+                </div>
+
+                <div id="vision" class="tab-content">
+                    <h3>Nuestra Visión</h3>
+                    <p>Ser reconocidos globalmente como el referente en la transformación digital, liderando el camino con tecnologías disruptivas y una cultura empresarial basada en la integridad, el respeto y la innovación constante.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div style="height: 50vh; text-align: center; padding-top: 100px;">
+        <h2>Espacio para la siguiente sección</h2>
+    </div>
+
+    <script src="script.js"></script>
+
+
+</body>
+</html>
