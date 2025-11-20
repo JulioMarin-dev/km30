@@ -1,0 +1,888 @@
+/* ============================================== */
+/* 1. CONFIGURACIÓN GLOBAL Y RESET               */
+/* ============================================== */
+* {
+    margin: 0;
+    padding: 0;
+    /* CLAVE: Asegura que el padding y el borde no aumenten el ancho total */
+    box-sizing: border-box; 
+}
+
+html {
+    /* CLAVE: Elimina cualquier margen residual en el elemento raíz */
+    width: 100%;
+    overflow-x: hidden; 
+    /* NUEVA CORRECCIÓN: Habilita el desplazamiento suave en la navegación por anclas */
+    scroll-behavior: smooth; 
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif; 
+    background-color: #f5f5f5; 
+    color: #f0f0f0; 
+    /* Oculta el scroll horizontal causado por elementos que se desbordan */
+    overflow-x: hidden; 
+}
+
+h1, h2, h3 {
+    font-weight: 700; 
+}
+
+/* Opcional: Para Font Awesome Icons */
+/* Si usas un CDN, puedes quitar este import si ya lo tienes en HTML */
+/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'); */
+
+
+/* --- Botones Generales --- */
+.primary-button, .content button { 
+    background-color: #90ee90;
+    color: #1a1a1a;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none; 
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+.primary-button:hover, .content button:hover {
+    background-color: #6edc6e;
+    transform: scale(1.05);
+}
+
+
+/* ============================================== */
+/* 2. BARRA DE MENÚ (HEADER/NAV)                 */
+/* ============================================== */
+.page-header {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(26, 26, 26, 0.9), rgba(26, 26, 26, 0.4));
+    animation: header-intro 1.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
+.logo-link {
+    text-decoration: none;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-menu a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    padding: 5px 0;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+    color: #90ee90;
+    border-bottom: 2px solid #90ee90;
+}
+
+/* Selector de Idioma Desplegable (Estilos Clave) */
+.language-switcher {
+    position: relative;
+    cursor: pointer;
+    margin-left: 20px; 
+    list-style: none; 
+    padding: 0;
+}
+.language-switcher .lang-options {
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    background-color: rgba(43, 43, 43, 0.95);
+    /* ... otros estilos de lista ... */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    z-index: 101; 
+}
+.language-switcher:hover .lang-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+/* ... otros estilos del language-switcher ... */
+
+@keyframes header-intro {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ============================================== */
+/* 3. SLIDER FULL SCREEN (100% VIEWPORT)         */
+/* ============================================== */
+
+.container {
+    position: relative;
+    width: 100vw; 
+    height: 100vh; 
+    background: #fff; 
+    padding: 0;
+    overflow: hidden; 
+}
+
+.content .name {
+    /* CLAVE 1: Tamaño grande, usa 'vw' para que escale con la pantalla */
+    font-size: 4vw; 
+    text-transform: uppercase;
+    /* CLAVE 2: Peso de fuente muy fuerte */
+    font-weight: 900; 
+    
+    /* CLAVE 3: Sombra de texto para asegurar el contraste con la imagen */
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
+    
+    opacity: 0;
+    animation: animate 1s ease-in-out 1 forwards;
+}
+
+.content .des {
+    /* La descripción debe ser notablemente más pequeña */
+    font-size: 1.1em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: animate 1s ease-in-out 0.3s forwards;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* Estilo Base para las tarjetas adyacentes */
+.item {
+    width: 15vw; 
+    height: 50vh; 
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%); 
+    border-radius: 20px;
+    box-shadow: 0 15px 30px #505050; 
+    background-position: 50% 50%;
+    background-size: cover;
+    display: inline-block;
+    transition: 0.5s; 
+    opacity: 0; 
+    left: 100vw; 
+}
+
+/* Item #1 (Buffer): Oculta, tamaño 100% */
+.slide .item:nth-child(1) {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    border-radius: 0;
+    width: 100%; 
+    height: 100%; 
+    opacity: 0; 
+    box-shadow: none; 
+}
+
+/* Item #2: Diapositiva principal (Activa). Visible al 100% */
+.slide .item:nth-child(2) {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    border-radius: 0;
+    width: 100%; 
+    height: 100%; 
+    opacity: 1; 
+    box-shadow: none; 
+    background-position: center center;
+}
+
+/* Item #3: Tarjeta adyacente (Visible en la esquina derecha) */
+.slide .item:nth-child(3) {
+    width: 15vw; 
+    height: 50vh;
+    opacity: 1; 
+    left: calc(100% - 17vw); 
+    transform: translate(0, -50%); 
+    border-radius: 20px;
+    box-shadow: 0 15px 30px #505050; 
+}
+
+/* Item #4 y posteriores: Ocultar el resto de las tarjetas */
+.slide .item:nth-child(n + 4) {
+    left: 100vw; 
+    opacity: 0;
+}
+
+/* Estilos para el contenido y animación del Item #2 */
+.item:nth-child(2) .content { display: block; }
+.content {
+    position: absolute; top: 50%; left: 10%; width: 350px; text-align: left;
+    color: #eee; transform: translate(0, -50%); display: block; filter: none;
+}
+/* ... animaciones y estilos de texto del slider omitidos por brevedad pero funcionales ... */
+
+/* Estilos de los botones de navegación del Slider (Corregidos) */
+.button {
+    position: absolute; bottom: 5%; text-align: center; width: 100%;
+    display: flex; justify-content: center; gap: 15px; z-index: 10;
+}
+
+.button button {
+    width: 45px; height: 45px; border-radius: 50%; 
+    border: 2px solid #90ee90; 
+    cursor: pointer; background-color: transparent; 
+    color: #90ee90; transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.button button:hover {
+    background-color: #90ee90; 
+    color: #1a1a1a; 
+    transform: scale(1.1);
+}
+
+
+/* Estilos de los botones de navegación del Slider */
+.button {
+    position: absolute; bottom: 5%; text-align: center; width: 100%;
+    display: flex; justify-content: center; gap: 15px; z-index: 10;
+}
+
+.button button {
+    width: 45px; height: 45px; border-radius: 50%; 
+    border: 2px solid #90ee90; 
+    cursor: pointer; background-color: transparent; 
+    color: #90ee90; transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.button button:hover {
+    background-color: #90ee90; 
+    color: #1a1a1a; 
+    transform: scale(1.1);
+}
+
+/* NUEVO: Estilos de la barra de progreso */
+.progress-bar {
+    position: absolute;
+    bottom: 0; /* Posiciona en la parte inferior del slider */
+    left: 0;
+    width: 0%; /* Empieza en 0% */
+    height: 8px; /* Altura de la barra */
+    background-color: #90ee90; /* Color de la barra de progreso */
+    z-index: 11; /* Por encima de los botones si es necesario */
+    transition: width 8s linear; /* MISMO TIEMPO QUE EL INTERVALO JS */
+    opacity: 0.7; /* Transparencia */
+}
+
+/* Cuando se reinicia la barra, no debe tener transición de ancho */
+.progress-bar.reset {
+    transition: none;
+    width: 0%;
+}
+
+
+/* ============================================== */
+/* 4. SECCIÓN: NOSOTROS (Opción 5: Nuestra Esencia)*/
+/* ============================================== */
+.essence-section {
+    position: relative;
+    padding: 100px 50px;
+    background-color: #0d0d0d;
+    text-align: center;
+}
+
+.essence-section .section-title {
+    color: #f0f0f0;
+    font-size: 3em;
+    font-weight: 800;
+}
+
+.essence-section .section-title::after {
+    content: 'INNOVACIÓN Y PASIÓN'; /* Subtítulo decorativo */
+    display: block;
+    font-size: 0.4em;
+    color: #90ee90;
+    margin-top: 5px;
+    letter-spacing: 5px;
+}
+
+.essence-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas: foto y contenido */
+    gap: 60px;
+    max-width: 1200px;
+    margin: 60px auto 0;
+    text-align: left;
+}
+
+.essence-photo-placeholder {
+    background-color: #1a1a1a;
+    background-image: url('images/imagen5.jpeg'); 
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    min-height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; 
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    position: relative; /* FIX CRÍTICO: Esto establece el contexto para el botón posicionado absolutamente */
+}
+.essence-photo-placeholder p {
+    color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.essence-info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.info-card {
+    background-color: #2b2b2b;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-left: 5px solid #90ee90; /* Detalle de acento */
+    transition: background-color 0.3s ease;
+}
+
+.info-card:hover {
+    background-color: #3a3a3a;
+}
+
+.info-card h3 {
+    color: #90ee90;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+.info-card i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.info-card p {
+    color: #bbb;
+}
+
+
+/* ============================================== */
+/* 5. CLASES DE ANIMACIÓN AL HACER SCROLL (REVEAL)*/
+/* ============================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes animate {
+    from {
+        opacity: 0;
+        transform: translate(0, 100px);
+        filter: blur(33px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0);
+        filter: blur(0);
+    }
+}
+
+/* ============================================== */
+/* 6. ESTILOS DE SECCIONES GENERALES (Servicios, Clientes, Contacto)*/
+/* ============================================== */
+.section-template {
+    width: 100%;
+    margin: 0;
+    position: relative;
+    padding: 80px 50px;
+    text-align: center;
+    background-color: #1a1a1a; /* Fondo oscuro principal */
+    color: #f0f0f0;
+    overflow: hidden;
+}
+
+.section-title {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: #90ee90; /* Color de acento */
+    text-transform: uppercase;
+}
+
+.section-description {
+    max-width: 800px;
+    margin: 0 auto 50px;
+    font-size: 1.1em;
+    color: #bbb;
+}
+
+/* ============================================== */
+/* 7. SECCIÓN SERVICIOS (4 Tarjetas)             */
+/* ============================================== */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas iguales */
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-card {
+    background-color: #2b2b2b; /* Fondo de la tarjeta (similar al content de about) */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    border-top: 5px solid #90ee90; /* Detalle de acento */
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.7);
+}
+
+.card-icon {
+    font-size: 3em;
+    color: #90ee90;
+    margin-bottom: 20px;
+}
+
+.service-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    color: #f0f0f0;
+}
+
+/* ============================================== */
+/* 8. SECCIÓN CLIENTES                             */
+/* ============================================== */
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+.client-logo-placeholder {
+    height: 100px;
+    line-height: 100px;
+    background-color: #2b2b2b;
+    color: #90ee90;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 8px;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+    text-align: center;
+    border: 1px solid rgba(144, 238, 144, 0.3);
+}
+
+.client-logo-placeholder:hover {
+    opacity: 1;
+}
+
+/* ============================================== */
+/* 9. SECCIÓN CONTACTO                             */
+/* ============================================== */
+.contact-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+    background-color: #2b2b2b;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.contact-info, .contact-form-container {
+    flex: 1;
+    min-width: 300px;
+}
+
+.contact-info h3, .contact-form-container h3 {
+    color: #90ee90;
+    margin-bottom: 25px;
+    font-size: 1.6em;
+}
+
+.contact-info p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.contact-info i {
+    margin-right: 10px;
+    color: #90ee90;
+}
+
+.social-links a {
+    color: #f0f0f0;
+    font-size: 1.5em;
+    margin-right: 15px;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #90ee90;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+/* ============================================== */
+/* 10. FOOTER                                     */
+/* ============================================== */
+.site-footer {
+    background-color: #0d0d0d;
+    color: #bbb;
+    padding: 50px 50px 30px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.footer-logo, .footer-links, .footer-contact {
+    flex: 1;
+    padding: 0 20px;
+}
+
+.footer-logo img {
+    margin-bottom: 10px;
+}
+
+.footer-logo .tagline {
+    color: #90ee90;
+    font-style: italic;
+}
+
+.footer-links h4, .footer-contact h4 {
+    color: #f0f0f0;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links a {
+    color: #bbb;
+    text-decoration: none;
+    line-height: 1.8;
+    transition: color 0.3s;
+    display: block;
+}
+
+.footer-links a:hover {
+    color: #90ee90;
+}
+
+.site-footer .social-links a {
+    font-size: 1.2em;
+}
+
+.site-footer p:last-child {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #2b2b2b;
+    text-align: center;
+    width: 100%;
+    /* Asegura que el copyright esté centrado al final */
+    grid-column: 1 / -1; 
+}
+
+/* ============================================== */
+/* 11. MEDIA QUERIES (Responsive)                 */
+/* ============================================== */
+
+@media (max-width: 1024px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 850px) {
+    .contact-wrapper {
+        flex-direction: column;
+        gap: 40px;
+    }
+    .essence-content-grid {
+        grid-template-columns: 1fr; /* Una columna en tablets/móviles */
+        gap: 40px;
+    }
+}
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-logo, .footer-links, .footer-contact {
+        padding: 0;
+        width: 100%;
+    }
+    .footer-links ul {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+    .site-footer .social-links {
+        margin-bottom: 15px;
+    }
+}
+@media (max-width: 600px) {
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ============================================== */
+/* 12. BOTÓN DE WHATSAPP FLOTANTE                 */
+/* ============================================== */
+.whatsapp-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366; /* Color oficial de WhatsApp */
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.2em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    transition: all 0.3s ease;
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    opacity: 0; /* Empieza oculto */
+    visibility: hidden;
+    transform: scale(0.8);
+}
+
+.whatsapp-button:hover {
+    background-color: #1da851;
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Clases para mostrar/ocultar con JavaScript */
+.whatsapp-button.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+/* Media Query para tamaños de pantalla más pequeños */
+@media (max-width: 768px) {
+    .whatsapp-button {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.8em;
+    }
+}
+
+/* ============================================== */
+/* 13. ESTILOS DE POPUP / MODAL                   */
+/* ============================================== */
+
+/* Fondo oscurecido del modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Asegura que esté por encima de todo (incluyendo el WhatsApp) */
+    
+    /* Por defecto, está oculto */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Mostrar Modal */
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Contenido del Modal */
+.modal-content {
+    background-color: #1a1a1a; /* Fondo principal oscuro */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.9);
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto; /* Permite scroll si el contenido es largo */
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+/* Botón de Cierre */
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    background: transparent;
+    border: none;
+    color: #90ee90;
+    font-size: 2.5em;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s;
+}
+.close-modal-btn:hover {
+    color: #f0f0f0;
+}
+
+/* Grid de Publicaciones */
+.publication-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+/* Tarjeta de Publicación (Mantiene estética similar a las tarjetas de servicio) */
+.publication-card {
+    background-color: #2b2b2b;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+.publication-card:hover {
+    transform: translateY(-5px);
+}
+
+.pub-image {
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+}
+
+.pub-body {
+    padding: 20px;
+    text-align: left;
+}
+
+.pub-body h4 {
+    color: #90ee90;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.pub-body p {
+    color: #bbb;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+/* Botón pequeño para Publicaciones */
+.primary-button.small-button {
+    padding: 8px 15px;
+    font-size: 0.9em;
+}
+
+/* Media Queries para el Modal */
+@media (max-width: 850px) {
+    .publication-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 600px) {
+    .publication-grid {
+        grid-template-columns: 1fr;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+    .close-modal-btn {
+        top: 5px;
+        right: 15px;
+    }
+}

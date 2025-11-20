@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Screen Image Slider con Menú</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <header class="page-header">
+        <a href="#" class="logo-link">
+            <div class="logo">
+                <img src="logo-placeholder.png" alt="Logo de la Empresa" style="height: 50px;">
+            </div>
+        </a>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="#about">Nosotros</a></li>
+                <li><a href="#services">Servicios</a></li>
+                <li><a href="#clients">Clientes</a></li>
+                <li><a href="#contact">Contacto</a></li>
+                
+                <li class="language-switcher">
+                    <div class="current-lang">
+                        <img src="flag-es.png" alt="Spanish Flag" style="width: 24px; height: 16px;">
+                        ES
+                    </div>
+                    <ul class="lang-options">
+                        <li class="active-lang">
+                            <img src="flag-es.png" alt="Spanish Flag" style="width: 24px; height: 16px;">
+                            Español
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="flag-en.png" alt="English Flag" style="width: 24px; height: 16px;">
+                                English
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="slider" class="container"> 
+        <div class="slide">
+            
+            <div class="item" style="background-image: url('images/imagen1.jpeg');">
+                <div class="content">
+                    <div class="name">Ireland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/imagen2.jpeg');">
+                <div class="content">
+                    <div class="name">Finland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/imagen3.jpeg');">
+                <div class="content">
+                    <div class="name">Iceland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/imagen4.jpeg');">
+                <div class="content">
+                    <div class="name">Australia</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+            
+            <div class="item" style="background-image: url('images/imagen5.jpeg');">
+                <div class="content">
+                    <div class="name">Netherland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+            
+            <div class="item" style="background-image: url('images/imagen6.jpeg');">
+                <div class="content">
+                    <div class="name">Ireland</div>
+                    <div class="des">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <button class="primary-button">See More</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="progress-bar"></div>
+
+        <div class="button">
+            <button class="prev"><i class="fa-solid fa-arrow-left"></i></button>
+            <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+<section id="about" class="section-template essence-section reveal">
+    <h2 class="section-title reveal">KM30 | NUESTRA ESENCIA</h2>
+    <div class="section-description reveal">
+        <p>Impulsados por la innovación y la pasión, nuestro equipo se compromete a entregar la más alta calidad en ultracongelación, marcando la diferencia en la cadena de suministro global.</p>
+    </div>
+
+    <div class="essence-content-grid">
+        <div class="essence-photo-placeholder reveal">
+            <p>FOTO: Equipo de Innovación y Planta IQF</p>
+            <button id="open-popup-btn" class="primary-button" style="position: absolute; bottom: 20px;">Ver Publicaciones</button>
+        </div>
+        
+        <div class="essence-info-cards">
+            
+            <div class="info-card reveal">
+                <h3><i class="fa-solid fa-book-open"></i> Nuestra Historia</h3>
+                <p>Nacimos para redefinir la frescura. Desde 2013, hemos invertido en procesos que garantizan la calidad del producto desde el origen, estableciendo una trayectoria de crecimiento sostenido.</p>
+            </div>
+            
+            <div class="info-card reveal">
+                <h3><i class="fa-solid fa-users-gear"></i> El Equipo KM30</h3>
+                <p>Somos un grupo de profesionales apasionados por la agrotecnología y la cadena de frío, con la misión de ser socios estratégicos para nuestros clientes internacionales.</p>
+            </div>
+
+            <div class="info-card reveal">
+                <h3><i class="fa-solid fa-handshake-angle"></i> Compromiso y Sostenibilidad</h3>
+                <p>Nuestro compromiso abarca la trazabilidad total y prácticas sostenibles, minimizando el desperdicio y optimizando el consumo energético en la ultracongelación.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <section id="services" class="section-template services-section reveal">
+        <h2 class="section-title reveal">NUESTROS SERVICIOS</h2>
+        <div class="section-description reveal">
+            <p>Ofrecemos soluciones innovadoras para la conservación y distribución de productos frescos, manteniendo su calidad desde el origen hasta el consumidor.</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <i class="fa-solid fa-snowflake card-icon"></i>
+                <h3>Criogenización (IQF)</h3>
+                <p>Implementamos sistemas de Congelación Rápida Individual (IQF) para preservar la textura, sabor y nutrientes de frutas y verduras.</p>
+            </div>
+            
+            <div class="service-card reveal">
+                <i class="fa-solid fa-truck-fast card-icon"></i>
+                <h3>Logística a -18°C</h3>
+                <p>Nuestra cadena de frío está garantizada por una flota moderna y sistemas de monitoreo avanzados, asegurando la integridad del producto.</p>
+            </div>
+            
+            <div class="service-card reveal">
+                <i class="fa-solid fa-box-open card-icon"></i>
+                <h3>Empaques al Vacío</h3>
+                <p>Desarrollamos soluciones de empaque que minimizan la oxidación y prolongan la vida útil, adaptándonos a las necesidades del cliente.</p>
+            </div>
+            
+            <div class="service-card reveal">
+                <i class="fa-solid fa-headset card-icon"></i>
+                <h3>Soporte y Asesoría</h3>
+                <p>Proveemos consultoría técnica especializada en manejo post-cosecha y optimización de procesos de ultracongelación.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="clients" class="section-template clients-section reveal">
+        <h2 class="section-title reveal">CLIENTES Y PARTNERS</h2>
+        <div class="section-description reveal">
+            <p>Hemos colaborado con las principales marcas de alimentos a nivel global, construyendo relaciones basadas en la confianza y la calidad.</p>
+        </div>
+        
+        <div class="clients-grid reveal">
+            <div class="client-logo-placeholder">FOOD CO.</div>
+            <div class="client-logo-placeholder">GLOBAL FRUITS</div>
+            <div class="client-logo-placeholder">FROZEN MARKET</div>
+            <div class="client-logo-placeholder">GREEN HARVEST</div>
+            <div class="client-logo-placeholder">AGROTECH</div>
+            <div class="client-logo-placeholder">DISTRIBUIDORA X</div>
+        </div>
+    </section>
+
+    <section id="contact" class="section-template contact-section reveal">
+        <h2 class="section-title reveal">CONTÁCTANOS</h2>
+        <div class="contact-wrapper reveal">
+            <div class="contact-info">
+                <h3>Información de Contacto</h3>
+                <p><i class="fa-solid fa-location-dot"></i> Dirección: Av. Innovación #123, Ciudad Tecnológica, País.</p>
+                <p><i class="fa-solid fa-phone"></i> Teléfono: +1 234 567 890</p>
+                <p><i class="fa-solid fa-envelope"></i> Email: info@empresa.com</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="contact-form-container">
+                <h3>Envíanos un Mensaje</h3>
+                <form class="contact-form">
+                    <input type="text" placeholder="Tu Nombre" required>
+                    <input type="email" placeholder="Tu Email" required>
+                    <textarea placeholder="Tu Mensaje" rows="4" required></textarea>
+                    <button type="submit" class="primary-button">Enviar Mensaje</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <a href="https://wa.me/XXXXXXXXXXX" class="whatsapp-button" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <div id="publications-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <h2 class="section-title" style="color: #f0f0f0;">ÚLTIMAS PUBLICACIONES</h2>
+            
+            <div class="publication-grid">
+                
+                <div class="publication-card">
+                    <div class="pub-image" style="background-image: url('images/imagen1-bk.jpeg');"></div>
+                    <div class="pub-body">
+                        <h4>Ultra-congelación de Mango: El Secreto de la Frescura</h4>
+                        <p>Analizamos cómo el proceso IQF preserva la textura y el sabor del mango, listos para su uso industrial y directo.</p>
+                        <button class="primary-button small-button">Leer Más</button>
+                    </div>
+                </div>
+                
+                <div class="publication-card">
+                    <div class="pub-image" style="background-image: url('images/imagen4-bk.jpeg');"></div>
+                    <div class="pub-body">
+                        <h4>Reporte Anual de Trazabilidad y Sostenibilidad</h4>
+                        <p>Conozca nuestras métricas de cumplimiento, eficiencia energética y compromiso con la cadena de valor agrícola en 2024.</p>
+                        <button class="primary-button small-button">Descargar</button>
+                    </div>
+                </div>
+
+                <div class="publication-card">
+                    <div class="pub-image" style="background-image: url('images/imagen6-bk.jpeg');"></div>
+                    <div class="pub-body">
+                        <h4>Avocado IQF: El Mercado Global del Aguacate Congelado</h4>
+                        <p>Exploramos las tendencias de mercado para el aguacate ultracongelado y las ventajas de nuestro formato de cubos IQF.</p>
+                        <button class="primary-button small-button">Ver Estudio</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="logo-placeholder.png" alt="Logo de la Empresa" style="height: 50px;">
+                <p class="tagline">Innovación en Congelación.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Mapa del Sitio</h4>
+                <ul>
+                    <li><a href="#about">Nosotros</a></li>
+                    <li><a href="#services">Servicios</a></li>
+                    <li><a href="#clients">Clientes</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Síguenos</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <p>&copy; 2025 Empresa KM30. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+
+</body>
+</html>
