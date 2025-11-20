@@ -1,0 +1,641 @@
+/* ============================================== */
+/* 1. CONFIGURACIÓN GLOBAL Y RESET               */
+/* ============================================== */
+* {
+    margin: 0;
+    padding: 0;
+    /* CLAVE: Asegura que el padding y el borde no aumenten el ancho total */
+    box-sizing: border-box; 
+}
+
+html {
+    /* CLAVE: Elimina cualquier margen residual en el elemento raíz */
+    width: 100%;
+    overflow-x: hidden; 
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif; 
+    background-color: #f5f5f5; 
+    color: #f0f0f0; 
+    /* Oculta el scroll horizontal causado por elementos que se desbordan */
+    overflow-x: hidden; 
+}
+
+h1, h2, h3 {
+    font-weight: 700; 
+}
+
+/* Opcional: Para Font Awesome Icons */
+/* Si usas un CDN, puedes quitar este import si ya lo tienes en HTML */
+/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'); */
+
+
+/* --- Botones Generales --- */
+.primary-button, .content button { 
+    background-color: #90ee90;
+    color: #1a1a1a;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none; 
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+.primary-button:hover, .content button:hover {
+    background-color: #6edc6e;
+    transform: scale(1.05);
+}
+
+
+/* ============================================== */
+/* 2. BARRA DE MENÚ (HEADER/NAV)                 */
+/* ============================================== */
+.page-header {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(26, 26, 26, 0.9), rgba(26, 26, 26, 0.4));
+    animation: header-intro 1.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
+.logo-link {
+    text-decoration: none;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-menu a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    padding: 5px 0;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+    color: #90ee90;
+    border-bottom: 2px solid #90ee90;
+}
+
+/* Selector de Idioma Desplegable (Estilos Clave) */
+.language-switcher {
+    position: relative;
+    cursor: pointer;
+    margin-left: 20px; 
+    list-style: none; 
+    padding: 0;
+}
+.language-switcher .lang-options {
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    background-color: rgba(43, 43, 43, 0.95);
+    /* ... otros estilos de lista ... */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    z-index: 101; 
+}
+.language-switcher:hover .lang-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+/* ... otros estilos del language-switcher ... */
+
+@keyframes header-intro {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ============================================== */
+/* 3. SLIDER FULL SCREEN (100% VIEWPORT)         */
+/* ============================================== */
+
+.container {
+    position: relative;
+    width: 100vw; 
+    height: 100vh; 
+    background: #fff; 
+    padding: 0;
+    overflow: hidden; 
+}
+
+.content .name {
+    /* CLAVE 1: Tamaño grande, usa 'vw' para que escale con la pantalla */
+    font-size: 4vw; 
+    text-transform: uppercase;
+    /* CLAVE 2: Peso de fuente muy fuerte */
+    font-weight: 900; 
+    
+    /* CLAVE 3: Sombra de texto para asegurar el contraste con la imagen */
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
+    
+    opacity: 0;
+    animation: animate 1s ease-in-out 1 forwards;
+}
+
+.content .des {
+    /* La descripción debe ser notablemente más pequeña */
+    font-size: 1.1em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: animate 1s ease-in-out 0.3s forwards;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* Estilo Base para las tarjetas adyacentes */
+.item {
+    width: 15vw; 
+    height: 50vh; 
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%); 
+    border-radius: 20px;
+    box-shadow: 0 15px 30px #505050; 
+    background-position: 50% 50%;
+    background-size: cover;
+    display: inline-block;
+    transition: 0.5s; 
+    opacity: 0; 
+    left: 100vw; 
+}
+
+/* Item #1 (Buffer): Oculta, tamaño 100% */
+.slide .item:nth-child(1) {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    border-radius: 0;
+    width: 100%; 
+    height: 100%; 
+    opacity: 0; 
+    box-shadow: none; 
+}
+
+/* Item #2: Diapositiva principal (Activa). Visible al 100% */
+.slide .item:nth-child(2) {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    border-radius: 0;
+    width: 100%; 
+    height: 100%; 
+    opacity: 1; 
+    box-shadow: none; 
+    background-position: center center;
+}
+
+/* Item #3: Tarjeta adyacente (Visible en la esquina derecha) */
+.slide .item:nth-child(3) {
+    width: 15vw; 
+    height: 50vh;
+    opacity: 1; 
+    left: calc(100% - 17vw); 
+    transform: translate(0, -50%); 
+    border-radius: 20px;
+    box-shadow: 0 15px 30px #505050; 
+}
+
+/* Item #4 y posteriores: Ocultar el resto de las tarjetas */
+.slide .item:nth-child(n + 4) {
+    left: 100vw; 
+    opacity: 0;
+}
+
+/* Estilos para el contenido y animación del Item #2 */
+.item:nth-child(2) .content { display: block; }
+.content {
+    position: absolute; top: 50%; left: 10%; width: 350px; text-align: left;
+    color: #eee; transform: translate(0, -50%); display: block; filter: none;
+}
+/* ... animaciones y estilos de texto del slider omitidos por brevedad pero funcionales ... */
+
+/* Estilos de los botones de navegación del Slider (Corregidos) */
+.button {
+    position: absolute; bottom: 5%; text-align: center; width: 100%;
+    display: flex; justify-content: center; gap: 15px; z-index: 10;
+}
+
+.button button {
+    width: 45px; height: 45px; border-radius: 50%; 
+    border: 2px solid #90ee90; 
+    cursor: pointer; background-color: transparent; 
+    color: #90ee90; transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.button button:hover {
+    background-color: #90ee90; 
+    color: #1a1a1a; 
+    transform: scale(1.1);
+}
+
+
+/* ============================================== */
+/* 4. NUEVA SECCIÓN: NOSOTROS (Corregido el ancho)*/
+/* ============================================== */
+.about-section {
+    width: 100%; 
+    margin: 0;
+    
+    /* CLAVE: Posicionamiento relativo para contener la capa de fondo */
+    position: relative; 
+    padding: 80px 50px;
+    text-align: center;
+    background-color: transparent; /* Ya no lleva fondo sólido */
+    color: #f0f0f0;
+    overflow: hidden;
+}
+
+/* Capa de Fondo para la Imagen */
+.about-bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Detrás del contenido */
+    /* La clase 'reveal' aplicará la animación al hacer scroll */
+}
+
+/* Contenedor del Contenido (Texto y Botones) */
+.about-content-wrapper {
+    position: relative;
+    z-index: 2; /* Encima de la imagen */
+}
+
+/* Estilos de la Imagen Individual (la que rota) */
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    
+    /* CLAVE: Difuminado y Oscurecido */
+    filter: blur(5px) brightness(0.4); 
+    
+    /* Control de visibilidad */
+    opacity: 0; 
+    transition: opacity 1s ease; /* Transición suave al cambiar de imagen */
+}
+
+.bg-image.active {
+    opacity: 1; /* Muestra la imagen activa */
+}
+
+/* Ajustar el fondo del contenido para mayor legibilidad */
+.about-content {
+    max-width: 900px;
+    margin: 0 auto;
+    /* Fondo semitransparente para contrastar con la imagen */
+    background-color: rgba(43, 43, 43, 0.85); 
+    padding: 40px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.tab-button {
+    background-color: #444;
+    color: #f0f0f0;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background-color: #90ee90;
+    color: #1a1a1a;
+    font-weight: bold;
+}
+
+.about-content {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #2b2b2b;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fade-in 0.5s ease;
+}
+
+/* ============================================== */
+/* 5. CLASES DE ANIMACIÓN AL HACER SCROLL (REVEAL)*/
+/* ============================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes animate {
+    from {
+        opacity: 0;
+        transform: translate(0, 100px);
+        filter: blur(33px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0);
+        filter: blur(0);
+    }
+}
+
+/* ========================================= */
+/* --- SECCIÓN DE TARJETAS ENCAPSULADA --- */
+/* ========================================= */
+
+.card-section {
+    /* Contenedor principal para encapsular todos los estilos */
+}
+
+.card-section :root {
+    /* Variables de Color y Transición - Se usan como fallback o por defecto */
+    --clr: #0b1a2d; 
+    --circle-glow: #1a6ac9; /* Color de la luz de neón */
+    --transition-duration: 0.5s;
+    --animation-duration: 0.8s; /* Duración de la animación de giro */
+}
+
+/* 💥 Keyframes de la Botella (Giro y Desplazamiento 3D) */
+/* Se mantienen a nivel global ya que no interfieren con otros estilos */
+@keyframes spinBottle {
+    0% {
+        transform: rotate(360deg) rotateY(0deg) rotateZ(0deg); 
+    }
+    100% {
+        transform: rotate(0deg) rotateY(-20deg) rotateZ(20deg); 
+    }
+}
+
+/* ------------------- ESTILOS BASE ------------------- */
+
+/* El body fue eliminado. Se asume que el contenedor padre maneja la alineación. */
+.card-section .card-container {
+    display: flex;
+    gap: 30px; 
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    /* Los siguientes estilos son para centrar la sección si es necesario, si no, puedes quitarlos */
+    padding: 20px;
+}
+
+/* --- Estilos de la Tarjeta (Card) --- */
+.card-section .card {
+    position: relative;
+    width: 300px; /* Ancho base */
+    height: 400px;
+    background: var(--clr); 
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible; 
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    transform: translateZ(0); 
+    transition: transform var(--transition-duration), border-radius var(--transition-duration), background var(--transition-duration);
+}
+
+/* GENERALIZACIÓN: Cards 1 y 2 (Expansión DERECHA) */
+.card-section .card:nth-child(-n+2) {
+    transform-origin: left; 
+}
+
+/* GENERALIZACIÓN: Cards 3 y 4 (Expansión IZQUIERDA) */
+.card-section .card:nth-child(n+3) {
+    transform-origin: right; 
+}
+
+
+/* --- Capas Frontales (Círculo, Neón, Logo) --- */
+.card-section .circle {
+    position: absolute; top: 50%; left: 50%; width: 180px; height: 180px; transform: translate(-50%, -50%);
+    background: #000; border-radius: 50%; z-index: 100; display: flex; justify-content: center; align-items: center;
+    transition: transform var(--transition-duration); transition-delay: 0.5s; 
+}
+.card-section .circle::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scale(1); background: none; border-radius: 50%;
+    box-shadow: 0 0 5px var(--circle-glow), 0 0 25px var(--circle-glow), 0 0 50px var(--circle-glow), 0 0 100px var(--circle-glow);
+    opacity: 1; transition: opacity 0.5s, transform 0.5s; transition-delay: 0.5s;
+}
+.card-section .circle .logo {
+    width: 120px; height: 120px; z-index: 110; transform: scale(1); transition: transform 0.5s; transition-delay: 0.5s;
+}
+.card-section .circle .logo img { width: 100%; height: 100%; }
+
+
+/* --- Botella (Producto) --- */
+.card-section .product-img {
+    position: absolute;
+    top: 50%; 
+    left: 50%; 
+    width: 250px; 
+    height: 350px;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 90; 
+    transition: transform 0.8s, top 0.8s, left 0.8s; 
+    transition-delay: 0s;
+    transform-style: preserve-3d;
+}
+.card-section .product-img img {
+    max-width: 100%; 
+    height: auto; 
+    transform: rotateY(0deg) rotateZ(0deg); 
+    transform-origin: center center;
+}
+
+/* --- Contenido (Detalles) --- */
+.card-section .content { 
+    position: absolute; 
+    padding: 20px; 
+    color: #fff; 
+    text-align: left; 
+    top: 50px; 
+    left: 20px; 
+    max-width: 200px; 
+    opacity: 0; 
+    z-index: 50; 
+    transition: opacity 0.5s, transform 0.5s; 
+    transition-delay: 0s; 
+}
+.card-section .content h2 { font-size: 2em; margin-bottom: 5px; }
+.card-section .content p { font-size: 0.9em; margin-bottom: 20px; }
+.card-section .shop-btn { display: inline-block; padding: 8px 20px; background: #e60023; color: #fff; text-decoration: none; border-radius: 25px; font-weight: bold; transition: 0.3s; }
+.card-section .shop-btn:hover { background: #ff0033; }
+
+
+/* ========================================= */
+/* --- EFECTOS AL HACER HOVER (:hover) --- */
+/* ========================================= */
+
+.card-section .card:hover {
+    border-radius: 10px;
+    background: var(--circle-glow); 
+    z-index: 1000; 
+}
+
+/* 1. Expansión y Contenido para CARDS 1 y 2 (Expanden DERECHA) */
+.card-section .card:nth-child(-n+2):hover {
+    transform: scaleX(2) translateX(15px) translateZ(0); 
+}
+
+/* 1. Expansión y Contenido para CARDS 3 y 4 (Expanden IZQUIERDA) */
+.card-section .card:nth-child(n+3):hover {
+    transform: scaleX(2) translateX(-15px) translateZ(0); 
+}
+
+/* 2. Oculta Círculo y Revela */
+.card-section .card:hover .circle { transform: translate(-50%, -50%) scale(0); transition-delay: 0s; }
+.card-section .card:hover .circle::before { transform: scale(2.5); opacity: 0; transition-delay: 0s; }
+.card-section .card:hover .circle .logo { transform: scale(0); transition-delay: 0s; }
+
+
+/* 3. Revelación de la Botella (Posicionamiento) */
+
+/* Botella: Cards 1 y 2 (aparece en el lado derecho de la tarjeta expandida) */
+.card-section .card:nth-child(-n+2):hover .product-img {
+    top: -80px; 
+    left: 160px; 
+    transform: translate(0, 0) scale(1) scaleX(0.5); 
+    transition-delay: 0.5s; 
+}
+
+/* Botella: Cards 3 y 4 (aparece en el lado izquierdo de la tarjeta expandida) */
+.card-section .card:nth-child(n+3):hover .product-img {
+    top: -80px; 
+    left: 150px; 
+    transform: translate(0, 0) scale(1) scaleX(0.5); 
+    transition-delay: 0.5s; 
+}
+
+.card-section .card:hover .product-img img {
+    animation: spinBottle var(--animation-duration) forwards 0.5s; 
+    transform: rotate(0deg) rotateY(-20deg) rotateZ(20deg); 
+}
+
+
+/* 4. Revelación del Contenido (Posicionamiento) */
+
+/* Contenido: Cards 1 y 2 (aparece en el lado izquierdo de la tarjeta expandida) */
+.card-section .card:nth-child(-n+2):hover .content {
+    opacity: 1;
+    transform: scaleX(0.5) translateX(-100px); 
+    transition-delay: 0.5s;
+}
+
+/* Contenido: Cards 3 y 4 (aparece en el lado derecho de la tarjeta expandida) */
+.card-section .card:nth-child(n+3):hover .content {
+    opacity: 1;
+    transform: scaleX(0.5) translateX(-100px); 
+    transition-delay: 0.5s;
+}
+
+
+/* ========================================= */
+/* --- PERSONALIZACIÓN DE COLORES POR PRODUCTO --- */
+/* ========================================= */
+
+/* 🥭 Card Mango (Amarillo) */
+.card-section .card-mango {
+    --clr: #332200; /* Fondo del card oscuro */
+}
+.card-section .card-mango:hover {
+    background: #FFC107; /* Fondo hover amarillo brillante */
+}
+.card-section .card-mango .circle::before {
+    /* Color Neón Amarillo */
+    box-shadow: 0 0 5px #FFC107, 0 0 25px #FFC107, 0 0 50px #FFC107, 0 0 100px #FFC107;
+}
+
+/* 🍓 Card Fresa (Rojo) */
+.card-section .card-fresa {
+    --clr: #3D0000; /* Fondo del card oscuro */
+}
+.card-section .card-fresa:hover {
+    background: #FF5252; /* Fondo hover rojo brillante */
+}
+.card-section .card-fresa .circle::before {
+    /* Color Neón Rojo */
+    box-shadow: 0 0 5px #FF5252, 0 0 25px #FF5252, 0 0 50px #FF5252, 0 0 100px #FF5252;
+}
+
+/* 🫐 Card Arándano (Morado) */
+.card-section .card-arandano {
+    --clr: #1A0033; /* Fondo del card oscuro */
+}
+.card-section .card-arandano:hover {
+    background: #9C27B0; /* Fondo hover morado brillante */
+}
+.card-section .card-arandano .circle::before {
+    /* Color Neón Morado */
+    box-shadow: 0 0 5px #9C27B0, 0 0 25px #9C27B0, 0 0 50px #9C27B0, 0 0 100px #9C27B0;
+}
+
+/* 🥑 Card Palta (Verde) */
+.card-section .card-palta {
+    --clr: #003300; /* Fondo del card oscuro */
+}
+.card-section .card-palta:hover {
+    background: #4CAF50; /* Fondo hover verde brillante */
+}
+.card-section .card-palta .circle::before {
+    /* Color Neón Verde */
+    box-shadow: 0 0 5px #4CAF50, 0 0 25px #4CAF50, 0 0 50px #4CAF50, 0 0 100px #4CAF50;
+}

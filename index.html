@@ -1,1 +1,604 @@
-<h1>prueba de publicacion web</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Web Moderna - Solución Final Unificada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ============================================== */
+        /* 0. VARIABLES Y KEYFRAMES GLOBALES              */
+        /* ============================================== */
+        :root {
+            --clr-dark: #1a1a1a; 
+            --clr-dark-accent: #2b2b2b;
+            --clr-neon: #90ee90; /* Verde Lima como neón principal */
+            --clr-neon-glow: #6edc6e; /* Verde un poco más oscuro para el hover */
+            --transition-duration: 0.5s;
+            --animation-duration: 0.8s;
+        }
+
+        /* 💥 Keyframes de Rotación (Usado en Services Card) */
+        @keyframes spinBottle {
+            0% { transform: rotate(360deg) rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotate(0deg) rotateY(-20deg) rotateZ(20deg); }
+        }
+
+        @keyframes header-intro {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes animate {
+            from { opacity: 0; transform: translate(0, 100px); filter: blur(33px); }
+            to { opacity: 1; transform: translate(0); filter: blur(0); }
+        }
+
+        /* ============================================== */
+        /* Animación de entrada (Reveal) */
+        /* ============================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ============================================== */
+        /* 1. CONFIGURACIÓN GLOBAL Y RESET               */
+        /* ============================================== */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box; 
+        }
+
+        html {
+            width: 100%; 
+            /* 🔑 CORRECCIÓN: Ocultamos el scroll horizontal globalmente (buena práctica) */
+            overflow-x: hidden; 
+        }
+
+        body {
+            margin: 0; font-family: 'Arial', sans-serif; 
+            background-color: var(--clr-dark); 
+            color: #f0f0f0; 
+            /* 🔑 CORRECCIÓN: Ocultamos el scroll horizontal globalmente (buena práctica) */
+            overflow-x: hidden; 
+        }
+
+        h1, h2, h3 { font-weight: 700; }
+
+        /* --- Botones Generales --- */
+        .primary-button, .content button { 
+            background-color: var(--clr-neon); color: var(--clr-dark);
+            border: none; font-weight: bold; border-radius: 5px;
+            cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none; display: inline-block; padding: 10px 20px;
+        }
+
+        .primary-button:hover, .content button:hover {
+            background-color: var(--clr-neon-glow); transform: scale(1.05);
+        }
+
+        .section-title {
+            font-size: 3em; margin-bottom: 50px;
+            color: #ffee00; text-align: center;
+        }
+
+
+        /* ============================================== */
+        /* 2. BARRA DE NAVEGACIÓN (HEADER)                */
+        /* ============================================== */
+        .page-header {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-sizing: border-box; z-index: 100;
+            background: linear-gradient(to bottom, rgba(26, 26, 26, 0.9), rgba(26, 26, 26, 0.4));
+            animation: header-intro 1.5s ease-out forwards;
+            opacity: 0; transform: translateY(-50px);
+        }
+
+        .nav-menu ul {
+            list-style: none; margin: 0; padding: 0;
+            display: flex; gap: 30px; align-items: center;
+        }
+        .nav-menu a {
+            color: #f0f0f0; text-decoration: none; font-size: 1.1em;
+            font-weight: 500; padding: 5px 0;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+        }
+        .nav-menu a:hover, .nav-menu a.active {
+            color: var(--clr-neon); border-bottom: 2px solid var(--clr-neon);
+        }
+
+        /* ============================================== */
+        /* 3. SLIDER FULL SCREEN (BANNER)                 */
+        /* ============================================== */
+        .container {
+            position: relative; width: 100vw; height: 100vh; 
+            background: var(--clr-dark); padding: 0; 
+            overflow: hidden; 
+        }
+
+        .slide {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+        }
+
+        /* Estilo Base para los items */
+        .item {
+            width: 15vw; height: 50vh; position: absolute; top: 50%;
+            transform: translate(0, -50%) translateX(100vw); 
+            border-radius: 20px;
+            box-shadow: 0 15px 30px #505050; 
+            background-position: 50% 50%; background-size: cover;
+            transition: 0.5s; opacity: 0; 
+            filter: brightness(1); 
+        }
+        
+        /* Contenido del Título del Slider */
+        .content {
+            position: absolute; top: 50%; left: 10%; width: 350px;
+            text-align: left; color: #eee; transform: translate(0, -50%);
+            display: none; filter: none; z-index: 2; 
+        }
+        .content.active { display: block; }
+
+        .content .name {
+            font-size: 4vw; text-transform: uppercase; font-weight: 900; 
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
+            opacity: 0; animation: animate 1s ease-in-out 1 forwards;
+        }
+
+        /* Estilos de los botones de navegación del Slider */
+        .button {
+            position: absolute; bottom: 5%; text-align: center; width: 100%;
+            display: flex; justify-content: center; gap: 15px; z-index: 10;
+        }
+        .button button {
+            width: 45px; height: 45px; border-radius: 50%; 
+            border: 2px solid var(--clr-neon); 
+            cursor: pointer; background-color: transparent; 
+            color: var(--clr-neon); transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ============================================== */
+        /* 4. SECCIÓN: NOSOTROS (FONDO SÓLIDO Y TABS)     */
+        /* ============================================== */
+        .about-section {
+            width: 100%; margin: 0; position: relative; 
+            padding: 80px 50px; text-align: center;
+            background-color: var(--clr-dark); color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .about-tabs {
+            display: flex; justify-content: center; gap: 20px; margin-bottom: 40px;
+        }
+        .tab-button {
+            background-color: #444; color: #f0f0f0; border: none;
+            padding: 12px 25px; border-radius: 8px; font-size: 1.1em;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: var(--clr-neon); color: var(--clr-dark); font-weight: bold;
+        }
+        .about-content {
+            max-width: 900px; margin: 0 auto;
+            background-color: var(--clr-dark-accent); 
+            padding: 50px; border-radius: 10px; text-align: left;
+            border: 1px solid rgba(144, 238, 144, 0.5); 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fade-in 0.5s ease; }
+        .tab-content h3 { color: var(--clr-neon); margin-bottom: 15px; }
+
+
+        /* ============================================== */
+        /* 5. SECCIÓN DE SERVICIOS (TARJETAS HOVER)       */
+        /* ============================================== */
+        .services-section {
+            min-height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: var(--clr-dark); padding: 80px 20px;
+        }
+        .card-container {
+            display: flex; 
+            gap: 30px; 
+            justify-content: center; 
+            align-items: center;
+            perspective: 1000px; 
+            /* Mantiene en una sola fila */
+            flex-wrap: nowrap; 
+            /* Se establece un ancho mínimo para forzar la fila */
+            min-width: 1260px; 
+            padding-bottom: 50px;
+            
+            /* 🔑 CORRECCIÓN CLAVE: Permite el scroll horizontal SÓLO en el contenedor de tarjetas */
+            overflow-x: auto; 
+            padding: 50px 0;
+            margin: 0 auto;
+        }
+
+        .card {
+            position: relative; 
+            width: 300px; 
+            height: 400px;
+            background: var(--clr-dark-accent); 
+            border-radius: 20px;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            overflow: visible; 
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            transform: translateZ(0); 
+            transition: transform var(--transition-duration), border-radius var(--transition-duration), background var(--transition-duration);
+            --clr-card-base: var(--clr-dark-accent);
+            --clr-card-hover: var(--clr-neon-glow);
+            --clr-card-neon: var(--clr-neon);
+            flex-shrink: 0; 
+        }
+        
+        .card:hover {
+            border-radius: 10px; background: var(--clr-card-hover); z-index: 1000; 
+        }
+
+        /* Expansión al Hover */
+        .card:nth-child(-n+2) { transform-origin: left; }
+        .card:nth-child(n+3) { transform-origin: right; }
+        .card:nth-child(-n+2):hover { transform: scale(1.3, 1.1) translateX(15px) translateZ(0); }
+        .card:nth-child(n+3):hover { transform: scale(1.3, 1.1) translateX(-15px) translateZ(0); }
+
+
+        /* Círculo y Neón */
+        .circle {
+            position: absolute; top: 50%; left: 50%; width: 180px; height: 180px;
+            transform: translate(-50%, -50%); background: var(--clr-dark); 
+            border-radius: 50%; z-index: 100;
+            transition: transform var(--transition-duration); transition-delay: 0.5s; 
+        }
+        .circle::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            box-shadow: 0 0 5px var(--clr-card-neon), 0 0 25px var(--clr-card-neon), 0 0 50px var(--clr-card-neon), 0 0 100px var(--clr-card-neon);
+            opacity: 1; transition: opacity 0.5s, transform 0.5s; transition-delay: 0.5s;
+        }
+        .circle .logo {
+            font-size: 4em; color: var(--clr-card-neon); 
+            z-index: 110; transform: scale(1); transition: transform 0.5s; transition-delay: 0.5s;
+        }
+
+        /* Contenido y Botón */
+        .content-card { 
+            position: absolute; padding: 20px; color: var(--clr-dark);
+            text-align: left; top: 50px; left: 20px; max-width: 200px; 
+            opacity: 0; z-index: 50; 
+            transition: opacity 0.5s, transform 0.5s; transition-delay: 0s; 
+        }
+        .content-card h2, .content-card p { color: var(--clr-dark); }
+        
+        .shop-btn { 
+            display: inline-block; padding: 8px 20px; 
+            background: var(--clr-dark); color: var(--clr-card-neon); 
+            text-decoration: none; border-radius: 5px; font-weight: bold; 
+            transition: 0.3s; border: 1px solid var(--clr-card-neon);
+        }
+
+        /* Revelación del Contenido */
+        .card:hover .circle { transform: translate(-50%, -50%) scale(0); transition-delay: 0s; }
+        .card:hover .circle::before { transform: scale(2.5); opacity: 0; transition-delay: 0s; }
+        .card:hover .circle .logo { transform: scale(0); transition-delay: 0s; }
+
+        /* Ajuste de posición del contenido al expandirse */
+        .card:nth-child(-n+2):hover .content-card { opacity: 1; transform: scaleX(0.77) translateX(-100px); transition-delay: 0.5s; }
+        .card:nth-child(n+3):hover .content-card { opacity: 1; transform: scaleX(0.77) translateX(-100px); transition-delay: 0.5s; }
+
+        /* Posicionamiento de la Imagen (Placeholder) */
+        .product-img { position: absolute; top: 50%; left: 50%; width: 250px; height: 350px; transform: translate(-50%, -50%) scale(0); z-index: 90; transition: transform 0.8s, top 0.8s, left 0.8s; transform-style: preserve-3d; }
+        .product-img img { max-width: 100%; height: auto; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+
+        .card:nth-child(-n+2):hover .product-img { top: -80px; left: 180px; transform: translate(0, 0) scale(1) scaleX(0.77); transition-delay: 0.5s; }
+        .card:nth-child(n+3):hover .product-img { top: -80px; left: 160px; transform: translate(0, 0) scale(1) scaleX(0.77); transition-delay: 0.5s; }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <a href="#home" class="logo-link">
+            <h1 style="color: #90ee90;">TU LOGO</h1>
+        </a>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#home" class="active">Inicio</a></li>
+                <li><a href="#about">Nosotros</a></li>
+                <li><a href="#services">Servicios</a></li>
+                <li><a href="#contact">Contacto</a></li>
+                <li class="language-switcher">
+                    <div class="current-lang">
+                        <i class="fas fa-globe"></i> ES <i class="fas fa-caret-down"></i>
+                    </div>
+                    </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="container">
+        <div class="slide">
+            
+            <div class="item" style="background-image: url('images/imagen6.jpeg');"></div>
+            <div class="item" style="background-image: url('images/imagen1.jpeg');">
+                <div class="content active">
+                    <div class="name">Diseño Web</div>
+                    <div class="des">Transformamos ideas en experiencias digitales impactantes y funcionales.</div>
+                    <button class="primary-button">Ver Proyectos</button>
+                </div>
+            </div>
+            <div class="item" style="background-image: url('images/imagen2.jpeg');">
+                <div class="content">
+                    <div class="name">Marketing Digital</div>
+                    <div class="des">Maximizamos tu visibilidad y retorno de inversión con estrategias efectivas.</div>
+                    <button class="primary-button">Ver Proyectos</button>
+                </div>
+            </div>
+            <div class="item" style="background-image: url('images/imagen3.jpeg');">
+                <div class="content">
+                    <div class="name">Consultoría TI</div>
+                    <div class="des">Asesoramiento experto para la optimización de tu infraestructura tecnológica.</div>
+                    <button class="primary-button">Ver Proyectos</button>
+                </div>
+            </div>
+            <div class="item" style="background-image: url('images/imagen4.jpeg');">
+                <div class="content">
+                    <div class="name">Consultoría TI</div>
+                    <div class="des">Asesoramiento experto para la optimización de tu infraestructura tecnológica.</div>
+                    <button class="primary-button">Ver Proyectos</button>
+                </div>
+            </div>
+            <div class="item" style="background-image: url('images/imagen5.jpeg');">
+                <div class="content">
+                    <div class="name">Consultoría TI</div>
+                    <div class="des">Asesoramiento experto para la optimización de tu infraestructura tecnológica.</div>
+                    <button class="primary-button">Ver Proyectos</button>
+                </div>
+            </div>
+            <div class="item" style="background-image: url('images/imagen6.jpeg');">
+                <div class="content">
+                    <div class="name">Consultoría TI</div>
+                    <div class="des">Asesoramiento experto para la optimización de tu infraestructura tecnológica.</div>
+                    <button class="primary-button">Ver Proyectos</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button">
+            <button class="prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="about-content-wrapper">
+            <h2 class="section-title reveal">QUIÉNES SOMOS</h2>
+
+            <div class="about-tabs reveal">
+                <button class="tab-button active" data-tab="somos">Nuestra Esencia</button>
+                <button class="tab-button" data-tab="mision">Misión</button>
+                <button class="tab-button" data-tab="vision">Visión</button>
+            </div>
+
+            <div class="about-content reveal">
+                <div id="somos" class="tab-content active">
+                    <h3>Innovación y Experiencia</h3>
+                    <p>Somos un equipo de profesionales apasionados por la tecnología y el diseño. Hemos ayudado a cientos de empresas a alcanzar sus metas digitales, combinando creatividad con soluciones técnicas de vanguardia.</p>
+                </div>
+
+                <div id="mision" class="tab-content">
+                    <h3>Nuestra Promesa</h3>
+                    <p>Nuestra misión es empoderar a nuestros clientes a través de la digitalización, creando herramientas que no solo funcionen a la perfección, sino que también inspiren y generen un impacto positivo en su industria.</p>
+                </div>
+
+                <div id="vision" class="tab-content">
+                    <h3>El Futuro que Construimos</h3>
+                    <p>Ser reconocidos como líderes en soluciones digitales personalizadas, destacando por nuestra ética de trabajo, calidad inigualable y la capacidad de anticiparnos a las tendencias del mercado.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services-section">
+        <h2 class="section-title reveal">NUESTROS SERVICIOS CLAVE</h2>
+
+        <div class="card-container reveal"> 
+            
+            <div class="card" style="--clr-card-neon: #90ee90; --clr-card-hover: #6edc6e;">
+                <div class="circle">
+                    <div class="logo"><i class="fas fa-laptop-code"></i></div>
+                </div>
+                <div class="product-img">
+                    <img src="images/service-web.png" alt="Desarrollo Web">
+                </div>
+                <div class="content-card">
+                    <h2>Desarrollo Web</h2>
+                    <p>Sitios y aplicaciones a medida con las últimas tecnologías. Enfocados en la velocidad y la seguridad.</p>
+                    <a href="#" class="shop-btn">Explorar</a>
+                </div>
+            </div>
+
+            <div class="card" style="--clr-card-neon: #ffcc00; --clr-card-hover: #e0b400;">
+                <div class="circle">
+                    <div class="logo"><i class="fas fa-palette"></i></div>
+                </div>
+                <div class="product-img">
+                    <img src="images/service-ux.png" alt="Diseño UX/UI">
+                </div>
+                <div class="content-card">
+                    <h2>Diseño UX/UI</h2>
+                    <p>Experiencias de usuario intuitivas y diseños de interfaz que enamoran a primera vista.</p>
+                    <a href="#" class="shop-btn">Explorar</a>
+                </div>
+            </div>
+            
+            <div class="card" style="--clr-card-neon: #00ffff; --clr-card-hover: #00cccc;">
+                <div class="circle">
+                    <div class="logo"><i class="fas fa-rocket"></i></div>
+                </div>
+                <div class="product-img">
+                    <img src="images/service-marketing.png" alt="Marketing Digital">
+                </div>
+                <div class="content-card">
+                    <h2>Marketing Digital</h2>
+                    <p>Estrategias SEO, SEM y campañas de redes sociales para impulsar tu crecimiento online.</p>
+                    <a href="#" class="shop-btn">Explorar</a>
+                </div>
+            </div>
+
+            <div class="card" style="--clr-card-neon: #90ee90; --clr-card-hover: #6edc6e;">
+                <div class="circle">
+                    <div class="logo"><i class="fas fa-brain"></i></div>
+                </div>
+                <div class="product-img">
+                    <img src="images/service-ti.png" alt="Consultoría TI">
+                </div>
+                <div class="content-card">
+                    <h2>Consultoría TI</h2>
+                    <p>Asesoramiento experto para optimizar tus procesos tecnológicos y asegurar tu infraestructura.</p>
+                    <a href="#" class="shop-btn">Explorar</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    
+    <section id="contact" class="about-section" style="padding-top: 50px; padding-bottom: 50px;">
+        <h2 class="section-title reveal">CONTÁCTANOS</h2>
+        <p class="reveal" style="max-width: 600px; margin: 0 auto; background: none; text-align: center;">¿Listo para empezar tu proyecto? Envíanos un mensaje.</p>
+        <button class="primary-button reveal" style="margin-top: 30px;">Enviar Mensaje</button>
+    </section>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lógica del Slider (Banner)
+            const items = document.querySelectorAll('.slide .item');
+            const contents = document.querySelectorAll('.slide .content');
+            const prev = document.querySelector('.prev');
+            const next = document.querySelector('.next');
+            let active = 1; 
+
+            function updateSlider() {
+                const totalSlides = items.length - 1; 
+                
+                const nextIndex = (active % totalSlides) + 1;
+                const nextNextIndex = ((active + 1) % totalSlides) + 1; 
+
+                items.forEach((item, index) => {
+                    const content = contents[index - 1]; 
+                    
+                    // Resetear posición y visibilidad para items inactivos
+                    item.style.opacity = '0';
+                    item.style.zIndex = '0';
+                    item.style.transform = 'translate(0, -50%) translateX(100vw)'; 
+                    item.style.width = '15vw';
+                    item.style.height = '50vh';
+                    item.style.top = '50%';
+                    item.style.borderRadius = '20px';
+                    item.style.filter = 'brightness(1)'; 
+                    
+                    if (content) content.classList.remove('active');
+
+
+                    if (index === active) {
+                        // Slide Principal ACTIVO: Se coloca atrás (z-index: 0)
+                        item.style.opacity = '1';
+                        item.style.zIndex = '0'; 
+                        item.style.width = '100%';
+                        item.style.height = '100%';
+                        item.style.top = '0';
+                        item.style.transform = 'translate(0, 0)';
+                        item.style.borderRadius = '0';
+                        if (content) content.classList.add('active');
+
+                    } else if (index === nextIndex) { 
+                        // Thumbnail 1: Se muestra delante de la imagen principal (z-index: 1)
+                        item.style.opacity = '1';
+                        item.style.zIndex = '1'; 
+                        item.style.transform = 'translate(calc(100vw - 18vw), -50%)'; 
+                        item.style.width = '15vw';
+                        item.style.height = '50vh';
+                        item.style.top = '50%';
+                        item.style.filter = 'brightness(0.8)'; 
+
+                    } else if (index === nextNextIndex) { 
+                        // Thumbnail 2: Se muestra delante de la imagen principal (z-index: 1)
+                        item.style.opacity = '0.7';
+                        item.style.zIndex = '1'; 
+                        item.style.transform = 'translate(calc(100vw - 14vw), -50%) scale(0.7)'; 
+                        item.style.width = '15vw';
+                        item.style.height = '50vh';
+                        item.style.top = '50%';
+                        item.style.filter = 'brightness(0.5)'; 
+                        
+                    } else if (index === 0) {
+                        // Item 0 (Buffer)
+                        item.style.opacity = '0';
+                    }
+                });
+            }
+            
+            function nextSlide() {
+                active = active < items.length - 1 ? active + 1 : 1;
+                updateSlider();
+            }
+            
+            function prevSlide() {
+                active = active > 1 ? active - 1 : items.length - 1;
+                updateSlider();
+            }
+            
+            next.onclick = nextSlide;
+            prev.onclick = prevSlide;
+            
+            updateSlider(); // Carga inicial
+            setInterval(nextSlide, 5000); // Auto-slide
+
+            
+            // Lógica de Tabs (Sección Nosotros)
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    button.classList.add('active');
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+
+            // Lógica de Revelación (Reveal) 
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    } 
+                });
+            }, {
+                threshold: 0.1 
+            });
+
+            document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
